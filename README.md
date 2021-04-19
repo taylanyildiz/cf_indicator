@@ -21,7 +21,7 @@ To use this package :
   dependencies:
     flutter:
       sdk: flutter
-    cf_indicator: "^0.0.1"
+    cf_indicator: "^0.0.3"
 ```
 
 

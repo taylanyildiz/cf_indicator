@@ -199,13 +199,14 @@ class _PageIndicatorState extends State<PageIndicator>
               painter: PageIndicatorPaint(
                 indicator: widget.indicator,
                 pageCount: widget.page,
-                page: widget.controller.hasListeners
+                page: widget.controller.hasClients &&
+                        widget.controller.page != null
                     ? widget.controller.page
                     : 0.0,
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
