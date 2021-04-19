@@ -4,3 +4,6 @@
 ## 0.0.2
 
 * Indicator page view
+## 0.0.3
+
+* Update pubspec.yaml

@@ -9,11 +9,11 @@
 
 ## Usage
 
-[Example](https://github.com/taylanyildiz/cf_indicator/blob/main/example/example.dart)
+[Example](https://github.com/taylanyildiz/cf_indicator/blob/master/example/example.dart)
 
 To use this package :
 
-* add the dependency to your [pubspec.yaml](https://github.com/taylanyildiz/cf_indicator/blob/main/pubspec.yaml) file.
+* add the dependency to your [pubspec.yaml](https://github.com/taylanyildiz/cf_indicator/blob/master/pubspec.yaml) file.
 
 ## dependencies:
 
