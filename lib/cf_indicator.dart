@@ -59,7 +59,6 @@ class PageIndicator extends StatefulWidget {
   double value;
 
   /// [value] chaged pageView child size not selected Child
-  /// [value] must be between [1.0] with [0.0]
   /// [value] default value [1.0] and it only work if you have a pageController it must be viewTranstion value and must be [<1.0]
   /// [example] [PageController] defalutPage = [PageController(initalPage = 0,viewFraction = 0.5)]
 
@@ -96,8 +95,8 @@ class PageIndicator extends StatefulWidget {
   PageController controller;
   PageIndicator({
     Key key,
-    @required this.controller,
     @required this.onPageChanged,
+    this.controller,
     Indicator indicator,
     double width,
     double height,
@@ -121,7 +120,6 @@ class PageIndicator extends StatefulWidget {
         assert(height != 0.0),
         assert(page != 0),
         assert(builder != null),
-        assert(value == value.clamp(0.0, 1.0)),
         super(key: key);
   @override
   _PageIndicatorState createState() => _PageIndicatorState();
@@ -129,11 +127,14 @@ class PageIndicator extends StatefulWidget {
 
 class _PageIndicatorState extends State<PageIndicator>
     with TickerProviderStateMixin {
+  PageController _pageController;
+  PageController _pageControllerDefault;
   AnimationController _controller;
   Animation<double> _animation;
+  int currentPage = 0;
 
   /// [_controller] every chaged page indicator set position step by step
-  /// [_animation] parent of [_controller] and setState this widget
+  /// [_animation] parent of [_controller] and setState this widget in every 1 microsec.
 
   ///[_pageViewWidget] here we are animationTransition page controller
   ///[AnimatedBuilder] animation => [controller] because we need pageController currentPage by use [onPageChanged]
@@ -144,13 +145,12 @@ class _PageIndicatorState extends State<PageIndicator>
         builder: (context, child) {
           double val = 1.0;
           if (widget.value != null &&
-              widget.controller.position.hasContentDimensions) {
-            val = widget.controller.page - index;
+              _pageController.position.hasContentDimensions) {
+            val = _pageController.page - index;
             val = (1 - (val.abs() * widget.value)).clamp(0.0, 1.0);
           }
           return Center(
-            child: Container(
-              color: Colors.blue,
+            child: SizedBox(
               width:
                   Curves.easeInOut.transform(widget.value != null ? val : 1.0) *
                       widget.width,
@@ -172,9 +172,15 @@ class _PageIndicatorState extends State<PageIndicator>
     //   initialPage: widget.controller.initialPage,
     //   viewportFraction: widget.controller.viewportFraction,
     // );
+    _pageControllerDefault = PageController(
+      initialPage: widget.initialPage,
+      keepPage: widget.keepPage,
+      viewportFraction: widget.viewportFraction,
+    );
+    _pageController = widget.controller ?? _pageControllerDefault;
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(microseconds: 1),
     )..repeat();
     _animation = CurvedAnimation(parent: _controller, curve: Curves.linear)
       ..addListener(() {
@@ -182,12 +188,22 @@ class _PageIndicatorState extends State<PageIndicator>
       });
   }
 
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   super.dispose();
+  //   _controller.dispose();
+  //   widget.controller.dispose();
+  //   _pageControllerDefault.dispose();
+  // }
+
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
     _controller.dispose();
-    widget.controller.dispose();
+    //widget.controller.dispose();
+    _pageControllerDefault.dispose();
   }
 
   @override
@@ -200,7 +216,7 @@ class _PageIndicatorState extends State<PageIndicator>
           width: MediaQuery.of(context).size.width,
           height: widget.height,
           child: PageView.builder(
-            controller: widget.controller,
+            controller: _pageController,
             scrollDirection: Axis.horizontal,
             onPageChanged: widget.onPageChanged,
             itemCount: widget.page,
@@ -214,9 +230,8 @@ class _PageIndicatorState extends State<PageIndicator>
               painter: PageIndicatorPaint(
                 indicator: widget.indicator,
                 pageCount: widget.page,
-                page: widget.controller.hasClients &&
-                        widget.controller.page != null
-                    ? widget.controller.page
+                page: _pageController.hasClients && _pageController.page != null
+                    ? _pageController.page
                     : 0.0,
               ),
             ),
@@ -227,6 +242,7 @@ class _PageIndicatorState extends State<PageIndicator>
   }
 }
 
+/// All of this Taylan YILDIZ :)
 /// [CustomPainter] is our indicator
 /// circle or rectagle indicator chaged color and change position with [PageView] position
 
@@ -281,7 +297,7 @@ class PageIndicatorPaint extends CustomPainter {
       Canvas canvas, Offset center, double totalWidth) {
     Offset circleCenter = center.translate((-totalWidth / 2) + radius, 0);
     for (var i = 0; i < pageCount; i++) {
-      canvas.drawCircle(circleCenter, radius + thickness, indicatorBackPaint);
+      canvas.drawCircle(circleCenter, radius - thickness, indicatorBackPaint);
       circleCenter = circleCenter.translate((2 * radius) + space, 0);
     }
   }
@@ -307,10 +323,10 @@ class PageIndicatorPaint extends CustomPainter {
 
     canvas.drawRRect(
       RRect.fromLTRBR(
-        indicatorLeftX - thickness,
-        -radius - thickness,
-        indicatorRightX + thickness,
-        radius + thickness,
+        indicatorLeftX,
+        -radius,
+        indicatorRightX,
+        radius,
         Radius.circular(radius),
       ),
       indicatorPaint,

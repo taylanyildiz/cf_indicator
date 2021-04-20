@@ -42,22 +42,18 @@ class HomeScreen extends StatefulWidget {
 
 /// [_pageController] is not default Controller if we want create a [PageController] and can use in our pageView,
 class _HomeScreenState extends State<HomeScreen> {
-  PageController _pageController;
+  // PageController _pageController;
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 1, viewportFraction: .5);
+    // _pageController = PageController(initialPage: 1, viewportFraction: .5);
   }
 
   /// [_displayWidget] showing child widget we have
   Widget _displayWidget(context, index) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: Image.asset(
-        Images.imageslist[index],
-        fit: BoxFit.cover,
-      ),
+    return Image.asset(
+      Images.imageslist[index],
+      fit: BoxFit.cover,
     );
   }
 
@@ -70,18 +66,19 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             PageIndicator(
               indicator: Indicator(
-                indicatorBackColor: Colors.white,
+                indicatorBackColor: Colors.grey,
                 indicatorColor: Colors.orange,
                 radius: 10.0,
                 thickness: -4.0,
                 space: 10.0,
               ),
-              height: 300.0,
+              // height: 300.0,
+              // width: 200.0,
               //backgroundColor: Colors.blue,
-              value: .5, // must be between 1.0 and 0.0
+              value: .5, // must be between 1.0 and 0.0 or null
               onPageChanged: (value) => print(value),
               page: Images.imageslist.length,
-              controller: _pageController,
+              // controller: _pageController,
               builder: (context, index) => _displayWidget(context, index),
             ),
           ],

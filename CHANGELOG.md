@@ -15,3 +15,7 @@
 ## 0.0.5
 
 * added [value] veriable. see for library explanation.
+
+## 0.0.6
+
+* added dispose animated and indicator thickness chaged 
