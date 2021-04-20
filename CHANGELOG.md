@@ -11,3 +11,7 @@
 ## 0.0.4
 
 * Update pubspec.yaml and update ReadMe.md
+
+## 0.0.5
+
+* added [value] veriable. see for library explanation.

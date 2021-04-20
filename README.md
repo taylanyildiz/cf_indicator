@@ -21,7 +21,7 @@ To use this package :
   dependencies:
     flutter:
       sdk: flutter
-    cf_indicator: "^0.0.3"
+    cf_indicator: "^0.0.5"
 ```
 
 
@@ -47,6 +47,7 @@ import 'package:cf_indicator/cf_indicator.dart';
     ),
     height: 300.0,
     //backgroundColor: Colors.blue,
+    value: .5 // must be between 1-0 or null
     onPageChanged: (value) => print(value),
     page: Images.imageslist.length,
     controller: _pageController,

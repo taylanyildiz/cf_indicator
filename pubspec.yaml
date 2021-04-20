@@ -1,6 +1,6 @@
 name: cf_indicator
 description: This package has a indicator with pageView on page.it's responsive and can chage postion of indicator.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/taylanyildiz/cf_indicator.git
 
 environment:

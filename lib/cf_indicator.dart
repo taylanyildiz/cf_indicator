@@ -59,6 +59,7 @@ class PageIndicator extends StatefulWidget {
   double value;
 
   /// [value] chaged pageView child size not selected Child
+  /// [value] must be between [1.0] with [0.0]
   /// [value] default value [1.0] and it only work if you have a pageController it must be viewTranstion value and must be [<1.0]
   /// [example] [PageController] defalutPage = [PageController(initalPage = 0,viewFraction = 0.5)]
 
@@ -95,14 +96,15 @@ class PageIndicator extends StatefulWidget {
   PageController controller;
   PageIndicator({
     Key key,
-    Indicator indicator,
-    this.backgroundColor,
     @required this.controller,
+    @required this.onPageChanged,
+    Indicator indicator,
     double width,
     double height,
-    @required this.onPageChanged,
+    this.backgroundColor,
     this.page = 3,
     this.autoTransition = false,
+    this.value,
     @required this.builder,
   })  : width = width ?? 200.0,
         height = height ?? 200.0,
@@ -119,6 +121,7 @@ class PageIndicator extends StatefulWidget {
         assert(height != 0.0),
         assert(page != 0),
         assert(builder != null),
+        assert(value == value.clamp(0.0, 1.0)),
         super(key: key);
   @override
   _PageIndicatorState createState() => _PageIndicatorState();
@@ -137,19 +140,23 @@ class _PageIndicatorState extends State<PageIndicator>
   /// [_pageViewWidget] show our children and animated Transition
 
   Widget _pageViewWidget(context, index) => AnimatedBuilder(
-        animation: widget.controller,
+        animation: _animation,
         builder: (context, child) {
-          if (widget.controller.position.hasContentDimensions) {
-            widget.value = widget.controller.page - index;
-            widget.value = (1 - (widget.value.abs() * 0.5)).clamp(0.0, 1.0);
+          double val = 1.0;
+          if (widget.value != null &&
+              widget.controller.position.hasContentDimensions) {
+            val = widget.controller.page - index;
+            val = (1 - (val.abs() * widget.value)).clamp(0.0, 1.0);
           }
           return Center(
             child: Container(
               color: Colors.blue,
-              width: Curves.easeInOut.transform(widget.value ?? 1.0) *
-                  widget.width,
-              height: Curves.easeInOut.transform(widget.value ?? 1.0) *
-                  widget.height,
+              width:
+                  Curves.easeInOut.transform(widget.value != null ? val : 1.0) *
+                      widget.width,
+              height:
+                  Curves.easeInOut.transform(widget.value != null ? val : 1.0) *
+                      widget.height,
               child: child,
             ),
           );
@@ -173,6 +180,14 @@ class _PageIndicatorState extends State<PageIndicator>
       ..addListener(() {
         setState(() {});
       });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _controller.dispose();
+    widget.controller.dispose();
   }
 
   @override

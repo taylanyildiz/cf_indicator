@@ -78,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               height: 300.0,
               //backgroundColor: Colors.blue,
+              value: .5, // must be between 1.0 and 0.0
               onPageChanged: (value) => print(value),
               page: Images.imageslist.length,
               controller: _pageController,
