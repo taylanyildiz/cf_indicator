@@ -101,7 +101,7 @@ class PageIndicator extends StatefulWidget {
     double width,
     double height,
     this.backgroundColor,
-    this.page = 3,
+    @required this.page,
     this.autoTransition = false,
     this.value,
     @required this.builder,
@@ -120,6 +120,7 @@ class PageIndicator extends StatefulWidget {
         assert(height != 0.0),
         assert(page != 0),
         assert(builder != null),
+        assert(page != null),
         super(key: key);
   @override
   _PageIndicatorState createState() => _PageIndicatorState();
@@ -274,7 +275,7 @@ class PageIndicatorPaint extends CustomPainter {
     @required this.page,
     @required this.pageCount,
     @required this.indicator,
-  })  : indicatorColor = indicator.indicatorColor,
+  })  : indicatorColor = indicator.indicatorColor ?? Colors.red,
         indicatorBackColor = indicator.indicatorBackColor ?? Colors.black,
         radius = indicator.radius ?? 10.0,
         thickness = indicator.thickness ?? 3.0,

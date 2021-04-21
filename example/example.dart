@@ -51,9 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// [_displayWidget] showing child widget we have
   Widget _displayWidget(context, index) {
-    return Image.asset(
-      Images.imageslist[index],
-      fit: BoxFit.cover,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20.0),
+      child: Image.asset(
+        Images.imageslist[index],
+        fit: BoxFit.cover,
+      ),
     );
   }
 
@@ -65,21 +68,21 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             PageIndicator(
-              indicator: Indicator(
-                indicatorBackColor: Colors.grey,
-                indicatorColor: Colors.orange,
-                radius: 10.0,
-                thickness: -4.0,
-                space: 10.0,
-              ),
+              // controller: _pageController,
               // height: 300.0,
               // width: 200.0,
               //backgroundColor: Colors.blue,
               value: .5, // must be between 1.0 and 0.0 or null
               onPageChanged: (value) => print(value),
               page: Images.imageslist.length,
-              // controller: _pageController,
               builder: (context, index) => _displayWidget(context, index),
+              indicator: Indicator(
+                indicatorBackColor: Colors.grey,
+                indicatorColor: Colors.orange,
+                radius: 8.0,
+                thickness: 0.0,
+                space: 10.0,
+              ),
             ),
           ],
         ),

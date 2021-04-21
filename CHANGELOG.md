@@ -19,3 +19,8 @@
 ## 0.0.6
 
 * added dispose animated and indicator thickness chaged 
+
+
+## 0.0.7
+
+* add [indicatorColor] default value in [Indicator] class for Painter  

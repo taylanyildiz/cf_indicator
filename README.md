@@ -21,7 +21,7 @@ To use this package :
   dependencies:
     flutter:
       sdk: flutter
-    cf_indicator: "^0.0.5"
+    cf_indicator: "^0.0.7"
 ```
 
 
@@ -36,21 +36,25 @@ import 'package:cf_indicator/cf_indicator.dart';
 ## example
 ```dart
   PageIndicator(
-    indicator: Indicator(
-      indicatorBackColor: Colors.grey,
-      indicatorColor: Colors.orange,
-      radius: 10.0,
-      thickness: -4.0,
-      space: 10.0,
-      ),
+    // controller: _pageController,
     // height: 300.0,
     // width: 200.0,
     //backgroundColor: Colors.blue,
     value: .5, // must be between 1.0 and 0.0 or null
     onPageChanged: (value) => print(value),
     page: Images.imageslist.length,
-    // controller: _pageController,
     builder: (context, index) => _displayWidget(context, index),
+    // you have default indicator. if you want change add indicator class 
+    // you don't have to fill every value in indicator. You can change what value[s] you want to change 
+    // indicator: Indicator(indicatorColor: Colors.blue),
+    <!-- indicator: Indicator(
+      indicatorBackColor: Colors.grey,
+      indicatorColor: Colors.orange,
+      radius: 10.0,
+      thickness: -4.0,
+      space: 10.0,
+      ), -->
+    
   ),
 ```
 
