@@ -28,7 +28,7 @@
 
 * add [indicatorColor] default value in [Indicator] class for Painter  
 
-## 0.0.8
+## 0.0.9
 
 * remove AnimationController 
 * remove setState method
