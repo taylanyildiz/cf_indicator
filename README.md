@@ -21,7 +21,7 @@ To use this package :
   dependencies:
     flutter:
       sdk: flutter
-    cf_indicator: "^0.0.7"
+    cf_indicator: "^0.0.8"
 ```
 
 
@@ -48,6 +48,7 @@ import 'package:cf_indicator/cf_indicator.dart';
     // you don't have to fill every value in indicator. You can change what value[s] you want to change 
     // indicator: Indicator(indicatorColor: Colors.blue),
     <!-- indicator: Indicator(
+      offset: Offset(0.0,20.0),
       indicatorBackColor: Colors.grey,
       indicatorColor: Colors.orange,
       radius: 10.0,
