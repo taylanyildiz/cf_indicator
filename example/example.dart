@@ -82,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 radius: 8.0,
                 thickness: 0.0,
                 space: 10.0,
+                // offset: Offset(0.0,0.0),
               ),
             ),
           ],

@@ -20,7 +20,17 @@
 
 * added dispose animated and indicator thickness chaged 
 
-
 ## 0.0.7
 
 * add [indicatorColor] default value in [Indicator] class for Painter  
+
+## 0.0.8
+
+* add [indicatorColor] default value in [Indicator] class for Painter  
+
+## 0.0.8
+
+* remove AnimationController 
+* remove setState method
+* # Listenable added
+* Using Listenable instead of constantly setState to increase efficiency  

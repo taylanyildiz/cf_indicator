@@ -1,5 +1,3 @@
-library cf_indicator;
-
 import 'package:flutter/material.dart';
 
 /// [Indicator] class have [radius] [thickness] [space]
@@ -101,7 +99,7 @@ class PageIndicator extends StatefulWidget {
     double width,
     double height,
     this.backgroundColor,
-    @required this.page,
+    this.page = 3,
     this.autoTransition = false,
     this.value,
     @required this.builder,
@@ -120,29 +118,26 @@ class PageIndicator extends StatefulWidget {
         assert(height != 0.0),
         assert(page != 0),
         assert(builder != null),
-        assert(page != null),
         super(key: key);
   @override
   _PageIndicatorState createState() => _PageIndicatorState();
 }
 
-class _PageIndicatorState extends State<PageIndicator>
-    with TickerProviderStateMixin {
+class _PageIndicatorState extends State<PageIndicator> {
   PageController _pageController;
   PageController _pageControllerDefault;
-  AnimationController _controller;
-  Animation<double> _animation;
+
   int currentPage = 0;
 
   /// [_controller] every chaged page indicator set position step by step
-  /// [_animation] parent of [_controller] and setState this widget in every 1 microsec.
+  /// [_animation] parent of [_controller] and setState this widget
 
   ///[_pageViewWidget] here we are animationTransition page controller
   ///[AnimatedBuilder] animation => [controller] because we need pageController currentPage by use [onPageChanged]
   /// [_pageViewWidget] show our children and animated Transition
 
   Widget _pageViewWidget(context, index) => AnimatedBuilder(
-        animation: _animation,
+        animation: _pageController,
         builder: (context, child) {
           double val = 1.0;
           if (widget.value != null &&
@@ -179,36 +174,27 @@ class _PageIndicatorState extends State<PageIndicator>
       viewportFraction: widget.viewportFraction,
     );
     _pageController = widget.controller ?? _pageControllerDefault;
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(microseconds: 1),
-    )..repeat();
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.linear)
-      ..addListener(() {
-        setState(() {});
-      });
   }
 
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   super.dispose();
-  //   _controller.dispose();
-  //   widget.controller.dispose();
-  //   _pageControllerDefault.dispose();
-  // }
-
   @override
-  void deactivate() {
-    // TODO: implement deactivate
-    super.deactivate();
-    _controller.dispose();
-    //widget.controller.dispose();
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    // print('dispose');
     _pageControllerDefault.dispose();
   }
 
+  // @override
+  // void deactivate() {
+  //   // TODO: implement deactivate
+  //   super.deactivate();
+  //   //widget.controller.dispose();
+  //   print('deactive');
+  // }
+
   @override
   Widget build(BuildContext context) {
+    print('index');
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -229,11 +215,10 @@ class _PageIndicatorState extends State<PageIndicator>
           child: Container(
             child: CustomPaint(
               painter: PageIndicatorPaint(
+                controller: _pageController,
+                animation: _pageController,
                 indicator: widget.indicator,
                 pageCount: widget.page,
-                page: _pageController.hasClients && _pageController.page != null
-                    ? _pageController.page
-                    : 0.0,
               ),
             ),
           ),
@@ -243,7 +228,6 @@ class _PageIndicatorState extends State<PageIndicator>
   }
 }
 
-/// All of this Taylan YILDIZ :)
 /// [CustomPainter] is our indicator
 /// circle or rectagle indicator chaged color and change position with [PageView] position
 
@@ -263,24 +247,28 @@ class PageIndicatorPaint extends CustomPainter {
 
   /// Up there settings [indicator] have
   Indicator indicator;
-  final double page;
+  double page;
   final int pageCount;
   Paint indicatorPaint;
   Paint indicatorBackPaint;
 
   /// [indicatorPaint] foreGround indicator circle paint
   /// [indicatorBackPaint] backGround indicator cirle paint
-
+  ///  [Listenable] ***
+  ///  [PageController]
+  final Listenable animation;
+  final PageController controller;
   PageIndicatorPaint({
-    @required this.page,
+    @required this.controller,
     @required this.pageCount,
     @required this.indicator,
+    @required this.animation,
   })  : indicatorColor = indicator.indicatorColor ?? Colors.red,
         indicatorBackColor = indicator.indicatorBackColor ?? Colors.black,
         radius = indicator.radius ?? 10.0,
         thickness = indicator.thickness ?? 3.0,
         space = indicator.space ?? 10.0,
-        super();
+        super(repaint: animation);
 
   /// [Offset] (center) it first our indicator in center
   @override
@@ -305,6 +293,11 @@ class PageIndicatorPaint extends CustomPainter {
 
   void _drawForegroundIdicator(
       Canvas canvas, Offset center, double totalWidth) {
+    if (controller.hasClients && controller.page != null) {
+      page = controller.page;
+    } else {
+      page = 0.0;
+    }
     final int pageIndexToLeft = page.floor();
     final double leftDotX = (center.dx - (totalWidth / 2)) +
         (pageIndexToLeft * ((2 * radius) + space));
@@ -336,7 +329,6 @@ class PageIndicatorPaint extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return true;
   }
 }
